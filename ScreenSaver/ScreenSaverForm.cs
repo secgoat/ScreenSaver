@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 
 namespace ScreenSaver
@@ -32,8 +33,13 @@ namespace ScreenSaver
         private bool previewMode = false;
         private bool songLoaded = false;
 
+        private bool linkHasDirection = false;
+        private Point linkDir = new Point(0, 0);
         //PictureBox[] hearts; //init later once random is init
 
+
+        double radian = 0.0;
+        double degree = 0.0;
         //Point moveLinkTo;
         //constructor for screen saver not preview mode
         public ScreenSaverForm(Rectangle bounds)
@@ -70,17 +76,20 @@ namespace ScreenSaver
             Cursor.Hide();
             TopMost = true;
             //get timer running
-            moveTimer.Interval = 3000;
+            moveTimer.Interval = 100;
             moveTimer.Tick += new EventHandler(moveTimer_Tick);
             moveTimer.Start();
 
             //start song if not in preview mode
             if (!previewMode && !songLoaded)
             {
-                WMPLib.WindowsMediaPlayer wmp = new WMPLib.WindowsMediaPlayer();
-                wmp.URL = "Content/hero.mp3";
-                wmp.controls.play();
-                songLoaded = true;
+                Thread thread = new Thread(delegate()
+                    {
+                        WMPLib.WindowsMediaPlayer wmp = new WMPLib.WindowsMediaPlayer();
+                        wmp.URL = "Content/hero.mp3";
+                        wmp.controls.play();
+                        songLoaded = true;
+                    });
             }
         }
 
@@ -116,73 +125,81 @@ namespace ScreenSaver
             // Move text to new location
             
             //moveLinkTo = FindClosestHeart();
+
             MoveLink();
-            
+            label1.Text = "HEART: " +heart.Location.ToString() +  "LINK: " + Link.Location.ToString() + "DEGREE: " + degree;
         }
 
         private void MoveLink()
         {
+            int dx = 0;
+            int dy = 0;
+            
+            
             if (heart.Bounds.Contains(Link.Bounds.X, Link.Bounds.Y)) 
             {
                 Link.Load("content/pickup.gif");
+                linkHasDirection = false;
                 InitHearts();
             }
-            
-            //figure out how to tell if he needs to go left right up or down then move him eth erght direction
-            double radian, degree;
-            int dx = 0;
-            int dy = 0;
-            radian = Math.Atan2(
-                heart.Bounds.Y - Link.Bounds.Y, 
-                heart.Bounds.X - Link.Bounds.X);
-            degree = Calculate.RadianToDegree(radian);
-            if (degree < 0) //always get a positive degree
-                degree += 360;
-            if (degree == 0)
-            {
-                dx = -1;
-                dy = 0;
-                Link.Load("content/left.gif");
-            }
-            if (degree == 45)
-            {
-                dx = -1;
-                dy = -1;
-                Link.Load("content/back.gif");
-            }
-            if (degree == 90)
-            {
-                dx = 0;
-                dy = -1;
-                Link.Load("content/back.gif");
-            }
-            if (degree == 135)
-            {
-                dx = 1;
-                dy = -1;
-                 Link.Load("content/back.gif");
-            }
-            if (degree == 180)
-            {
-                dx = 1;
-                dy = 0;
-                 Link.Load("content/right.gif");
-            }
-            if (degree == 225)
-            {
-                dx = 1;
-                dy = 1;
-                Link.Load("content/front.gif");
-            }
-            if (degree == 270)
-            {
-                dx = 0;
-                dy = 1;
-                Link.Load("content/front.gif");
-            }
 
-            Link.Left = 5 * dy;
-            Link.Top = 5 * dx;
+            if (!linkHasDirection)
+            {
+                //figure out how to tell if he needs to go left right up or down then move him eth erght direction
+                radian = Math.Atan2(
+                    heart.Bounds.Y - Link.Bounds.Y,
+                    heart.Bounds.X - Link.Bounds.X);
+                degree = Calculate.RadianToDegree(radian);
+                if (degree < 0) //always get a positive degree
+                    degree += 360;
+                if (degree >= 0 && degree < 45)
+                {
+                    dx = 0;
+                    dy = -1;
+                    Link.Load("content/left.gif");
+                }
+                if (degree >= 45 && degree < 90)
+                {
+                    dx = -1;
+                    dy = -1;
+                    Link.Load("content/back.gif");
+                }
+                if (degree >= 90 && degree < 135)
+                {
+                    dx = -1;
+                    dy = 0;
+                    Link.Load("content/back.gif");
+                }
+                if (degree >= 135 && degree < 180)
+                {
+                    dx = -1;
+                    dy = 1;
+                    Link.Load("content/back.gif");
+                }
+                if (degree >= 180 && degree < 225)
+                {
+                    dx = 0;
+                    dy = 1;
+                    Link.Load("content/right.gif");
+                }
+                if (degree >= 225 && degree < 270)
+                {
+                    dx = 1;
+                    dy = 1;
+                    Link.Load("content/front.gif");
+                }
+                if (degree >= 270 && degree < 360)
+                {
+                    dx = 1;
+                    dy = 0;
+                    Link.Load("content/front.gif");
+                }
+
+            }
+            //finally move th elittle bastard
+
+            Link.Left += 5 * dy;
+            Link.Top += 5 * dx;
         }
 
         private Point FindClosestHeart()
@@ -220,13 +237,20 @@ namespace ScreenSaver
         {
           //
             //Initialize the heart PictureBox ina random location
-            //hearts[i] = new System.Windows.Forms.PictureBox();
+            heart = new System.Windows.Forms.PictureBox();
+            heart.Name = "Heart";
             heart.Load("content/heart.png");
             heart.Location = new System.Drawing.Point(rand.Next(Bounds.Top, Bounds.Bottom), rand.Next(Bounds.Left, Bounds.Right));
-            //heart.Location = new Point(200, 200);
+            //heart.Location = new Point(159,59);
+           
             heart.Size = new System.Drawing.Size(35, 35);
-            heart.TabIndex = 1;
+            heart.TabIndex = 3;
             heart.TabStop = false;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
