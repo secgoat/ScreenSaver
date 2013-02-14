@@ -74,8 +74,8 @@ namespace ScreenSaver
         
         private void ScreenSaverForm_Load(object sender, EventArgs e)
         {
-            Cursor.Hide();
-            TopMost = true;
+            //Cursor.Hide();
+            //TopMost = true;
             //get timer running
             moveTimer.Interval = 1000;
             moveTimer.Tick += new EventHandler(moveTimer_Tick);
@@ -84,8 +84,8 @@ namespace ScreenSaver
 
         private void ScreenSaverForm_MouseClick(object sender, MouseEventArgs e)
         {
-            if(!previewMode)
-                Application.Exit();
+            if (!previewMode) { }
+                //Application.Exit();
         }
 
        
@@ -97,7 +97,7 @@ namespace ScreenSaver
                 if (!previewMode && Math.Abs(mouselocation.X - e.X) > 10 ||
                     Math.Abs(mouselocation.Y - e.Y) > 10)
                 {
-                    Application.Exit();
+                    //Application.Exit();
                 }
             }
                 mouselocation= e.Location;
@@ -105,8 +105,19 @@ namespace ScreenSaver
 
         private void ScreenSaverForm_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(!previewMode)
-                Application.Exit();
+            
+            if (Keys.Left != 0)
+                Link.Left -= 10;
+            if (Keys.Right != 0)
+                Link.Left += 10;
+            if (Keys.Up != 0)
+                Link.Top -= 10;
+            if (Keys.Down != 0)
+                Link.Top += 10;
+            
+            
+            /*if(!previewMode)
+                Application.Exit(); */
         }
 
         private void moveTimer_Tick(object sender, System.EventArgs e)
@@ -123,8 +134,8 @@ namespace ScreenSaver
         {
             int dx = 0;
             int dy = 0;
-            //Point linkLocation = Link.FindForm().PointToClient(Link.Parent.PointToScreen(Link.Location));
-           // Point heartLocation = heart.FindForm().PointToClient(heart.Parent.PointToScreen(heart.Location));
+            Point linkLocation = Link.PointToScreen(Point.Empty);
+            Point heartLocation = heart.PointToScreen(Point.Empty);
 
             if (heart.Bounds.Contains(Link.Bounds.X, Link.Bounds.Y)) 
             {
@@ -132,12 +143,12 @@ namespace ScreenSaver
                 linkHasDirection = false;
                 InitHearts();
             }
-
+            
            
                 //figure out how to tell if he needs to go left right up or down then move him eth erght direction
                 radian = Math.Atan2(
-                    Link.Location.X - heart.Location.X,
-                    Link.Location.Y - heart.Location.Y);
+                    linkLocation.X - heartLocation.X,
+                    linkLocation.Y - heartLocation.Y);
                 degree = Calculate.RadianToDegree(radian);
                 if (degree < 0) //always get a positive degree
                     degree += 360;

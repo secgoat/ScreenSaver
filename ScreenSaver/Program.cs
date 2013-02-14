@@ -70,9 +70,9 @@ namespace ScreenSaver
         {
             foreach (Screen screen in Screen.AllScreens)
             {
-                ScreenSaverForm screensaver = new ScreenSaverForm(screen.Bounds);
-                //Rectangle size = new Rectangle(0,0,800,600);
-                //ScreenSaverForm screensaver = new ScreenSaverForm(size);
+                //ScreenSaverForm screensaver = new ScreenSaverForm(screen.Bounds);
+                Rectangle size = new Rectangle(0,0,800,600);
+                ScreenSaverForm screensaver = new ScreenSaverForm(size);
                 screensaver.Show();
             }
         }
