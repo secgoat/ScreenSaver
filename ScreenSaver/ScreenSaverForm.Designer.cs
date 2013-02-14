@@ -35,6 +35,7 @@ namespace ScreenSaver
             this.Link = new System.Windows.Forms.PictureBox();
             this.heart = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.Link)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.heart)).BeginInit();
             this.SuspendLayout();
@@ -52,21 +53,25 @@ namespace ScreenSaver
             // 
             this.heart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.heart.Image = ((System.Drawing.Image)(resources.GetObject("heart.Image")));
-            this.heart.Location = new System.Drawing.Point(119, 55);
+            this.heart.Location = new System.Drawing.Point(1, 114);
             this.heart.Name = "heart";
             this.heart.Size = new System.Drawing.Size(35, 35);
-            this.heart.TabIndex = 3;
+            this.heart.TabIndex = 1;
             this.heart.TabStop = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(237, 9);
+            this.label1.Location = new System.Drawing.Point(101, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.Size = new System.Drawing.Size(70, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "label1";
+            this.label1.Text = "I LOVE YOU!";
             this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             // 
             // ScreenSaverForm
             // 
@@ -100,6 +105,7 @@ namespace ScreenSaver
         private System.Windows.Forms.PictureBox Link;
         private PictureBox heart;
         private Label label1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 
