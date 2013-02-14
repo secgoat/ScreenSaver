@@ -51,6 +51,7 @@ namespace ScreenSaver
                 {
                     ShowScreenSaver();
                     Application.Run();//Application.Run(new ScreenSaverForm());;
+                    StartMusic();
                 } 
                 else    // Undefined argument
                 {
@@ -69,11 +70,18 @@ namespace ScreenSaver
         {
             foreach (Screen screen in Screen.AllScreens)
             {
-               //ScreenSaverForm screensaver = new ScreenSaverForm(screen.Bounds);
-                Rectangle size = new Rectangle(0,0,800,600);
-                ScreenSaverForm screensaver = new ScreenSaverForm(size);
+                ScreenSaverForm screensaver = new ScreenSaverForm(screen.Bounds);
+                //Rectangle size = new Rectangle(0,0,800,600);
+                //ScreenSaverForm screensaver = new ScreenSaverForm(size);
                 screensaver.Show();
             }
+        }
+
+        static void StartMusic()
+        {
+            WMPLib.WindowsMediaPlayer wmp = new WMPLib.WindowsMediaPlayer();
+            wmp.URL = "content/hero.mp3";
+            wmp.controls.play();
         }
 
     }

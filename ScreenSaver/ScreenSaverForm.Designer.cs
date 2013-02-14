@@ -33,8 +33,10 @@ namespace ScreenSaver
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScreenSaverForm));
             this.moveTimer = new System.Windows.Forms.Timer(this.components);
             this.Link = new System.Windows.Forms.PictureBox();
+            this.heart = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Link)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heart)).BeginInit();
             this.SuspendLayout();
             // 
             // Link
@@ -46,10 +48,20 @@ namespace ScreenSaver
             this.Link.TabIndex = 1;
             this.Link.TabStop = false;
             // 
+            // heart
+            // 
+            this.heart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.heart.Image = ((System.Drawing.Image)(resources.GetObject("heart.Image")));
+            this.heart.Location = new System.Drawing.Point(119, 55);
+            this.heart.Name = "heart";
+            this.heart.Size = new System.Drawing.Size(35, 35);
+            this.heart.TabIndex = 3;
+            this.heart.TabStop = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(159, 59);
+            this.label1.Location = new System.Drawing.Point(237, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 2;
@@ -62,6 +74,7 @@ namespace ScreenSaver
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.heart);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Link);
             this.ForeColor = System.Drawing.Color.DarkRed;
@@ -74,6 +87,7 @@ namespace ScreenSaver
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ScreenSaverForm_MouseClick);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScreenSaverForm_MouseMove);
             ((System.ComponentModel.ISupportInitialize)(this.Link)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -84,7 +98,7 @@ namespace ScreenSaver
 
         private System.Windows.Forms.Timer moveTimer;
         private System.Windows.Forms.PictureBox Link;
-        private System.Windows.Forms.PictureBox heart = new PictureBox();
+        private PictureBox heart;
         private Label label1;
     }
 }

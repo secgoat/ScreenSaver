@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.Xna.Framework.Audio;
 
 
 namespace ScreenSaver
@@ -76,21 +77,9 @@ namespace ScreenSaver
             Cursor.Hide();
             TopMost = true;
             //get timer running
-            moveTimer.Interval = 100;
+            moveTimer.Interval = 1000;
             moveTimer.Tick += new EventHandler(moveTimer_Tick);
             moveTimer.Start();
-
-            //start song if not in preview mode
-            if (!previewMode && !songLoaded)
-            {
-                Thread thread = new Thread(delegate()
-                    {
-                        WMPLib.WindowsMediaPlayer wmp = new WMPLib.WindowsMediaPlayer();
-                        wmp.URL = "Content/hero.mp3";
-                        wmp.controls.play();
-                        songLoaded = true;
-                    });
-            }
         }
 
         private void ScreenSaverForm_MouseClick(object sender, MouseEventArgs e)
@@ -127,15 +116,16 @@ namespace ScreenSaver
             //moveLinkTo = FindClosestHeart();
 
             MoveLink();
-            label1.Text = "HEART: " +heart.Location.ToString() +  "LINK: " + Link.Location.ToString() + "DEGREE: " + degree;
+            label1.Text = "HEART: " + heart.Location.ToString() + "LINK: " + Link.Location.ToString() + "DEGREE: " + degree;
         }
 
         private void MoveLink()
         {
             int dx = 0;
             int dy = 0;
-            
-            
+            //Point linkLocation = Link.FindForm().PointToClient(Link.Parent.PointToScreen(Link.Location));
+           // Point heartLocation = heart.FindForm().PointToClient(heart.Parent.PointToScreen(heart.Location));
+
             if (heart.Bounds.Contains(Link.Bounds.X, Link.Bounds.Y)) 
             {
                 Link.Load("content/pickup.gif");
@@ -143,40 +133,66 @@ namespace ScreenSaver
                 InitHearts();
             }
 
-            if (!linkHasDirection)
-            {
+           
                 //figure out how to tell if he needs to go left right up or down then move him eth erght direction
                 radian = Math.Atan2(
-                    heart.Bounds.Y - Link.Bounds.Y,
-                    heart.Bounds.X - Link.Bounds.X);
+                    Link.Location.X - heart.Location.X,
+                    Link.Location.Y - heart.Location.Y);
                 degree = Calculate.RadianToDegree(radian);
                 if (degree < 0) //always get a positive degree
                     degree += 360;
-                if (degree >= 0 && degree < 45)
+
+                if (degree == 0)
                 {
                     dx = 0;
                     dy = -1;
+                }
+                if (degree > 0 && degree < 45)
+                {
+                    dx = 1;
+                    dy = -1;
                     Link.Load("content/left.gif");
                 }
-                if (degree >= 45 && degree < 90)
+                if (degree == 45)
                 {
-                    dx = -1;
+                    dx = 1;
+                    dy = -1;
+                }
+                if (degree > 45 && degree < 90)
+                {
+                    dx = 1;
                     dy = -1;
                     Link.Load("content/back.gif");
                 }
-                if (degree >= 90 && degree < 135)
+                if (degree == 90)
                 {
-                    dx = -1;
+                    dx = 1;
+                    dy = 0;
+                }
+                if (degree > 90 && degree < 135)
+                {
+                    dx = 1;
                     dy = 0;
                     Link.Load("content/back.gif");
                 }
-                if (degree >= 135 && degree < 180)
+                if (degree == 135)
                 {
-                    dx = -1;
+                    dx = 1;
+                    dy = 1;
+                }
+                if (degree > 135 && degree < 180)
+                {
+                    dx = 1;
                     dy = 1;
                     Link.Load("content/back.gif");
                 }
-                if (degree >= 180 && degree < 225)
+                if (degree == 180)
+                {
+                    dx = 0;
+                    dy = 1;
+                }
+
+                if (degree > 180 && degree < 225)
                 {
                     dx = 0;
                     dy = 1;
@@ -184,22 +200,24 @@ namespace ScreenSaver
                 }
                 if (degree >= 225 && degree < 270)
                 {
-                    dx = 1;
+                    dx = -1;
                     dy = 1;
                     Link.Load("content/front.gif");
                 }
                 if (degree >= 270 && degree < 360)
                 {
-                    dx = 1;
-                    dy = 0;
+                    dx = -1;
+                    dy = -1;
                     Link.Load("content/front.gif");
                 }
 
-            }
+            
             //finally move th elittle bastard
-
-            Link.Left += 5 * dy;
-            Link.Top += 5 * dx;
+            int  linkX = Link.Bounds.X;
+            int  linkY = Link.Bounds.Y;
+            Link.Location = new Point((linkX += 5 * dy), (linkY += 5 * dx));
+            //Link.Top += 5 * dy;
+            //Link.Left += 5 * dx;
         }
 
         private Point FindClosestHeart()
