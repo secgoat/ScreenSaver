@@ -30,34 +30,15 @@ namespace ScreenSaver
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScreenSaverForm));
             this.moveTimer = new System.Windows.Forms.Timer(this.components);
-            this.Link = new System.Windows.Forms.PictureBox();
-            this.heart = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            ((System.ComponentModel.ISupportInitialize)(this.Link)).BeginInit();
+            this.wordTimer = new System.Windows.Forms.Timer(this.components);
+            this.heart = new System.Windows.Forms.PictureBox();
+            this.Link = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.heart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Link)).BeginInit();
             this.SuspendLayout();
-            // 
-            // Link
-            // 
-            this.Link.Image = ((System.Drawing.Image)(resources.GetObject("Link.Image")));
-            this.Link.Location = new System.Drawing.Point(119, 114);
-            this.Link.Name = "Link";
-            this.Link.Size = new System.Drawing.Size(32, 35);
-            this.Link.TabIndex = 1;
-            this.Link.TabStop = false;
-            // 
-            // heart
-            // 
-            this.heart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.heart.Image = ((System.Drawing.Image)(resources.GetObject("heart.Image")));
-            this.heart.Location = new System.Drawing.Point(1, 114);
-            this.heart.Name = "heart";
-            this.heart.Size = new System.Drawing.Size(35, 35);
-            this.heart.TabIndex = 1;
-            this.heart.TabStop = false;
             // 
             // label1
             // 
@@ -72,6 +53,30 @@ namespace ScreenSaver
             // backgroundWorker1
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            // 
+            // wordTimer
+            // 
+            this.wordTimer.Interval = 3000;
+            this.wordTimer.Tick += new System.EventHandler(this.wordTimer_Tick);
+            // 
+            // heart
+            // 
+            this.heart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.heart.Image = global::ScreenSaver.Properties.Resources.heart;
+            this.heart.Location = new System.Drawing.Point(1, 114);
+            this.heart.Name = "heart";
+            this.heart.Size = new System.Drawing.Size(35, 35);
+            this.heart.TabIndex = 1;
+            this.heart.TabStop = false;
+            // 
+            // Link
+            // 
+            this.Link.Image = global::ScreenSaver.Properties.Resources.down;
+            this.Link.Location = new System.Drawing.Point(119, 114);
+            this.Link.Name = "Link";
+            this.Link.Size = new System.Drawing.Size(32, 35);
+            this.Link.TabIndex = 1;
+            this.Link.TabStop = false;
             // 
             // ScreenSaverForm
             // 
@@ -91,8 +96,8 @@ namespace ScreenSaver
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ScreenSaverForm_KeyPress);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ScreenSaverForm_MouseClick);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScreenSaverForm_MouseMove);
-            ((System.ComponentModel.ISupportInitialize)(this.Link)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.heart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Link)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -106,6 +111,7 @@ namespace ScreenSaver
         private PictureBox heart;
         private Label label1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private Timer wordTimer;
     }
 }
 

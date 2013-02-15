@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.Xna.Framework.Audio;
+using System.Media;
 
 
 namespace ScreenSaver
@@ -32,21 +33,16 @@ namespace ScreenSaver
         private Point mouselocation;
         private Random rand = new Random();
         private bool previewMode = false;
-
-        private bool linkHasDirection = false;
+        private bool songLoaded = false;
         private Point linkDir = new Point(0, 0);
-        //PictureBox[] hearts; //init later once random is init
-
-
         double radian = 0.0;
         double degree = 0.0;
-        //Point moveLinkTo;
+
         //constructor for screen saver not preview mode
         public ScreenSaverForm(Rectangle bounds)
         {
             InitializeComponent();
             this.Bounds = bounds;
-           // InitHearts();
         }
 
         // Constructor for preview
@@ -67,27 +63,32 @@ namespace ScreenSaver
             Size = ParentRect.Size;
             Location = new Point(0, 0);
 
-
             previewMode = true;
         }
         
         private void ScreenSaverForm_Load(object sender, EventArgs e)
         {
-            //Cursor.Hide();
-            //TopMost = true;
+            Cursor.Hide();
+            TopMost = true;
             //get timer running
             moveTimer.Interval = 100;
             moveTimer.Tick += new EventHandler(moveTimer_Tick);
             moveTimer.Start();
 
+            wordTimer.Tick += new EventHandler(wordTimer_Tick);
+            wordTimer.Start();
+
             //start the backgroundWorker to play a song
-            backgroundWorker1.RunWorkerAsync();
+            if (!songLoaded)
+            {
+                backgroundWorker1.RunWorkerAsync();
+            }
         }
 
         private void ScreenSaverForm_MouseClick(object sender, MouseEventArgs e)
         {
             if (!previewMode) { }
-                //Application.Exit();
+                Application.Exit();
         }
 
        
@@ -118,8 +119,7 @@ namespace ScreenSaver
             //moveLinkTo = FindClosestHeart();
 
             MoveLink();
-            label1.Left = rand.Next(Math.Max(1, Bounds.Width - label1.Width));
-            label1.Top = rand.Next(Math.Max(1, Bounds.Height - label1.Height));
+            
             //label1.Text = "HEART: " + heart.Location.ToString() + "LINK: " + Link.Location.ToString() + "DEGREE: " + degree;
         }
 
@@ -133,7 +133,6 @@ namespace ScreenSaver
             if(Link.Bounds.IntersectsWith(heart.Bounds))
             {
                 Link.Load("content/pickup.gif");
-                linkHasDirection = false;
                 InitHearts();
             }
             
@@ -155,7 +154,7 @@ namespace ScreenSaver
                 {
                     dx = -1;
                     dy = -1;
-                    Link.Load("content/left.gif");
+                    Link.Image = (ScreenSaver.Properties.Resources.left);
                 }
                 if (degree == 45)
                 {
@@ -262,17 +261,7 @@ namespace ScreenSaver
         
         private void InitHearts()
         {
-          //
-            //Initialize the heart PictureBox ina random location
-            //heart = new System.Windows.Forms.PictureBox();
-            //heart.Name = "Heart";
-            //heart.Load("content/heart.png");
             heart.Location = new System.Drawing.Point(rand.Next(0, 800), rand.Next(0, 600));
-            //heart.Location = new Point(159,59);
-           
-            //heart.Size = new System.Drawing.Size(35, 35);
-            //heart.TabIndex = 1;
-            //heart.TabStop = false;
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -283,9 +272,18 @@ namespace ScreenSaver
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             Thread.Sleep(3000);
-            WMPLib.WindowsMediaPlayer wmp = new WMPLib.WindowsMediaPlayer();
-            wmp.URL = "content/hero.mp3";
-            wmp.controls.play();
+            SoundPlayer song = new SoundPlayer(ScreenSaver.Properties.Resources.hero);
+            song.Play();
+            songLoaded = true;
+            //WMPLib.WindowsMediaPlayer wmp = new WMPLib.WindowsMediaPlayer();
+           // wmp.URL = "content/hero.mp3";
+           // wmp.controls.play();
+        }
+
+        private void wordTimer_Tick(object sender, EventArgs e)
+        {
+            label1.Left = rand.Next(Math.Max(1, Bounds.Width - label1.Width));
+            label1.Top = rand.Next(Math.Max(1, Bounds.Height - label1.Height));
         }
     }
 }
